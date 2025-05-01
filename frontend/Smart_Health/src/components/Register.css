@@ -1,0 +1,63 @@
+.register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #b0c4de;
+    padding: 20px;
+    position: relative;
+  }
+  
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .highlight {
+    color: black;
+    font-weight: bold;
+  }
+  
+  .register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 300px;
+  }
+  
+  label {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    color: black;
+  }
+  
+  input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button {
+    background-color: navy;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #001f3f;
+  }
+  
+  .doctor-image {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 100px;
+  }
+  

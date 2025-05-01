@@ -1,0 +1,353 @@
+/* Base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .dashboard-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    background-color: #f5f5f5;
+  }
+  
+  /* Sidebar styles */
+  .sidebar {
+    width: 70px;
+    background-color: #fff;
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .menu-icon {
+    width: 25px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 40px;
+  }
+  
+  .menu-line {
+    height: 3px;
+    width: 100%;
+    background-color: #93c5d3;
+  }
+  
+  .sidebar-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .sidebar-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
+    background-color: #e9e9e9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .icon-home:before {
+    content: "⌂";
+    font-size: 20px;
+    color: #93c5d3;
+  }
+  
+  .icon-chart:before {
+    content: "📊";
+    font-size: 16px;
+    color: #93c5d3;
+  }
+  
+  .icon-user:before {
+    content: "👤";
+    font-size: 16px;
+    color: #93c5d3;
+  }
+  
+  /* Main content styles */
+  .main-content {
+    flex: 1;
+    background-color: #93c5d3;
+    padding: 20px 20px 30px;
+    overflow-y: auto;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .logo {
+    font-family: 'Brush Script MT', cursive;
+    font-size: 26px;
+    color: white;
+  }
+  
+  .notification-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .bell-icon {
+    width: 20px;
+    height: 20px;
+    position: relative;
+  }
+  
+  .bell-icon:before {
+    content: "🔔";
+    font-size: 18px;
+    color: white;
+  }
+  
+  .today-button {
+    background-color: #1a1b4b;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+  }
+  
+  .connection-status {
+    font-size: 14px;
+    color: #1a1b4b;
+    margin-bottom: 15px;
+  }
+  
+  .welcome-card {
+    background-color: #f5f5f5;
+    border-radius: 20px;
+    padding: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .welcome-text h1 {
+    color: #1e6b75;
+    font-size: 36px;
+    margin-bottom: 10px;
+  }
+  
+  .welcome-text p {
+    color: #333;
+    font-size: 18px;
+  }
+  
+  .welcome-illustration {
+    width: 150px;
+    height: 150px;
+    opacity: 0.8;
+  }
+  
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  .metric-card {
+    background-color: #f5f5f5;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 150px;
+  }
+  
+  .metric-card h3 {
+    color: #333;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  
+  .health-score {
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .circular-progress {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: conic-gradient(#1e6b75 79%, #ddd 79%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  .circular-progress:before {
+    content: "";
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: white;
+  }
+  
+  .percentage {
+    color: #1e6b75;
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Right panel styles */
+  .right-panel {
+    width: 300px;
+    background-color: #1a1b4b;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .profile-section {
+    background-color: #282a5d;
+    border-radius: 20px;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+  }
+  
+  .profile-picture {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    margin-bottom: 15px;
+  }
+  
+  .profile-name {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+  
+  .profile-age {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #ccc;
+  }
+  
+  .profile-stats {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .stat-box {
+    flex: 1;
+    background-color: #f5f5f5;
+    border-radius: 15px;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .calendar-section {
+    background-color: #f5f5f5;
+    border-radius: 20px;
+    padding: 15px;
+  }
+  
+  .calendar-header {
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  
+  .calendar {
+    width: 100%;
+  }
+  
+  .calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 5px;
+  }
+  
+  .day-label {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .calendar-week {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .calendar-day {
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+  
+  .calendar-day:hover {
+    background-color: #eee;
+  }
+  
+  .calendar-day.selected {
+    background-color: #93c5d3;
+    color: white;
+  }
+  
+  .calendar-day.empty {
+    cursor: default;
+  }
+  
+  .notification-button {
+    background-color: #f5f5f5;
+    border-radius: 20px;
+    padding: 15px;
+    text-align: center;
+    font-weight: 500;
+    margin-top: auto;
+  }
+  .profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden; /* Ensures the image stays within the circular frame */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e0e0e0;
+  }
+  
+  .profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image fills the space properly */
+    border-radius: 50%;
+  }
