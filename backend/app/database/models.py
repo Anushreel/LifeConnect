@@ -41,6 +41,7 @@ class User(Base):
     # Relationships
     devices = relationship("Device", secondary="user_device", back_populates="users")
     sensor_readings = relationship("Sensor", back_populates="user")  # Direct access to readings
+    task = relationship("Task",back_populates="use")
 
 
 class Device(Base):
@@ -62,9 +63,18 @@ class Prediction(Base):
     health_status = Column(String(50))  # e.g., "normal", "warning", "critical"
     result = Column(Float) 
 
-    
     # Relationships
     sensor_reading = relationship("Sensor", back_populates="prediction")
+
+class Task(Base):
+    __tablename__="task"
+    task_id=Column(Integer,primary_key=True,index=True,autoincrement=True)
+    u_id=Column(Integer,ForeignKey(User.uid))
+    task_des=Column(String(250))
+    task_status=Column(String(50)) # Done, not done
+
+    # relationships
+    use = relationship("User", back_populates="task")
 
 # Association table for the many-to-many relationship between User and Device
 user_device = Table(
