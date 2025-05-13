@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from datetime import datetime, timedelta,timezone
-
+import random
 from app.database.database import get_db
 from app.database.crud import get_predictions_for_user, get_latest_prediction_for_user
 from app.schemas.prediction import HealthPredictionOut, HealthStatusSummary
@@ -47,7 +47,7 @@ def map_result_to_percentage(result):
     if result == 1:  # Healthy
         return 100
     elif result == 2:  # Moderate
-        return 50
+        return random.randint(60,80)
     else:  # Critical
         return 0
     

@@ -1,9 +1,12 @@
 from pydantic import BaseModel
 from typing import Optional,List
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 class DeviceBase(BaseModel):
-    thingspeak_channel_id: Optional[str]="2771512"
-    thingspeak_read_api_key: Optional[str]="TDAOWY27LQ0YE4H0"
+    thingspeak_channel_id: Optional[str]=os.getenv("THINGSPEAK_CHANNEL_ID")
+    thingspeak_read_api_key: Optional[str]=os.getenv("THINGSPEAK_READ_API_KEY")
 
     class Config:
         from_attributes = True

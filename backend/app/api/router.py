@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.endpoints import users, devices, sensors, predictions, auth
+from app.api.endpoints import users, devices, sensors, predictions, auth,tasks
 
 api_router = APIRouter()
 
@@ -33,3 +33,9 @@ api_router.include_router(
     prefix="/predictions",
     tags=["predictions"]
 )
+
+api_router.include_router(
+    tasks.router, 
+    prefix="/tasks", 
+    tags=["tasks"]
+) 

@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import List, Dict, Any, Optional
 from app.schemas.user import UserCreate,User
 
-from app.database.models import User, Device, Sensor, Prediction,user_device
+from app.database.models import User, Device, Sensor, Prediction,user_device,Task
 import logging
 
 logger = logging.getLogger(__name__)
@@ -235,3 +235,71 @@ def set_user_active_status(db: Session, user_id: int, is_active: bool):
         db.rollback()
         logger.error(f"Error setting user active status: {str(e)}")
         return False
+    
+# task operations
+def create_task(db: Session,task_data: Dict[str,Any]):
+    '''Create tasks for a user'''
+    try:
+        db_task=Task(**task_data)
+        db.add(db_task)
+        db.commit()
+        db.refresh(db_task)
+        return db_task
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Error creating task {e}")
+        raise
+
+def get_tasks_of_user(db: Session, user_id:int):
+    return db.query(Task).filter(Task.u_id==user_id)
+
+def delete_task(db: Session, task_id=int):
+    '''Delete task by it's ID'''
+    try:
+        task=db.query(Task).filter(Task.task_id==task_id).first()
+        if task:
+            db.delete(task)
+            db.commit()
+            return True
+        return False
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Couldn't delete task{e}")
+        return False
+    
+def modify_task(db:Session,task_id:int, updated_data: Dict[str,Any]):
+    try:
+        task=db.query(Task).filter(Task.task_id==task_id).first()
+        if not task:
+            return None
+            
+        for key, value in updated_data.items():
+            setattr(task, key, value)
+            
+        db.add(task)
+        db.commit()
+        db.refresh(task)
+        return task
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Error modifying task: {str(e)}")
+        raise
+
+def mark_as_done(db:Session,task_id:int):
+    try:
+        task=db.query(Task).filter(Task.task_id==task_id).first()
+        if not task:
+            return None
+        task.task_status="Done"
+        db.add(task)
+        db.commit()
+        db.refresh(task)
+        return task
+    except Exception as e:
+        db.rollback()
+        logger.error(f"couldn't update status of the task {e}")
+        raise
+
+def get_task_by_id(db: Session, task_id: int):
+    """Get a specific task by ID"""
+    return db.query(Task).filter(Task.task_id == task_id).first()
