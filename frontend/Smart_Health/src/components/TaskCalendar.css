@@ -1,0 +1,342 @@
+.task-calendar-container {
+  background-color: #f5f5f5;
+  border-radius: 20px;
+  padding: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.calendar-header button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #1e6b75;
+  padding: 5px 10px;
+}
+
+.calendar-header button:hover {
+  background-color: rgba(30, 107, 117, 0.1);
+  border-radius: 4px;
+}
+
+.calendar {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 5px;
+}
+
+.day-label {
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+  padding: 5px 0;
+}
+
+.calendar-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 50%;
+  position: relative;
+  flex-direction: column;
+}
+
+.day-number {
+  z-index: 1;
+}
+
+.calendar-day:hover {
+  background-color: #eee;
+}
+
+.calendar-day.selected {
+  background-color: #93c5d3;
+  color: white;
+}
+
+.calendar-day.empty {
+  cursor: default;
+}
+
+.calendar-day.has-tasks::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  width: 5px;
+  height: 5px;
+  background-color: #1e6b75;
+  border-radius: 50%;
+}
+
+.tasks-section {
+  margin-top: 10px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.tasks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.tasks-header h3 {
+  font-size: 16px;
+  color: #333;
+}
+
+.add-task-btn {
+  background-color: #1e6b75;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+}
+
+.add-task-btn:hover {
+  background-color: #165761;
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: 200px;
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+}
+
+.task-item:hover {
+  background-color: #f0f0f0;
+}
+
+.task-item.completed .task-text {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.task-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.task-status-icon {
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.task-done {
+  color: #4caf50;
+}
+
+.task-not-done {
+  color: #bbbbbb;
+}
+
+.task-text {
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.task-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.task-edit-btn, .task-delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.task-edit-btn {
+  color: #2196f3;
+}
+
+.task-delete-btn {
+  color: #f44336;
+}
+
+.task-edit-btn:hover, .task-delete-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.no-tasks {
+  color: #888;
+  font-style: italic;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px 0;
+  color: #666;
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+/* Task Modal */
+.task-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.task-modal {
+  background-color: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.task-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.task-modal-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+.task-modal-content {
+  padding: 20px;
+}
+
+.task-modal-content textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.task-modal-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.cancel-btn, .save-btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  color: #333;
+}
+
+.save-btn {
+  background-color: #1e6b75;
+  border: none;
+  color: white;
+}
+
+.save-btn:disabled {
+  background-color: #b0bec5;
+  cursor: not-allowed;
+}
+
+.cancel-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.save-btn:hover:not(:disabled) {
+  background-color: #165761;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .task-modal {
+    width: 95%;
+  }
+  
+  .calendar-day {
+    font-size: 12px;
+  }
+}
