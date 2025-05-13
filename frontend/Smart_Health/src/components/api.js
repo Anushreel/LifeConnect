@@ -75,6 +75,71 @@ export const predictionAPI = {
     api.get(`/predictions/user/${userId}/summary?days=${days}`),
 };
 
+// Task API
+export const taskAPI = {
+  getUserTasks: async (userId) => {
+    try {
+      console.log(`Attempting to fetch tasks for user: ${userId}`);
+      const response = await api.get(`/tasks/user/${userId}`);
+      console.log('Tasks fetched successfully:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching tasks: ', error);
+      throw error;
+    }
+  },
+
+  createTask: async (taskData) => {
+    try {
+      const response = await api.post(`/tasks/`, taskData);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating task: ', error);
+      throw error;
+    }
+  },
+
+  updateTask: async (taskId, taskData) => {
+    try {
+      const response = await api.put(`/tasks/${taskId}`, taskData);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating task: ', error);
+      throw error;
+    }
+  },
+
+  markTaskAsDone: async (taskId) => {
+    try {
+      const response = await api.patch(`/tasks/${taskId}/mark-done`);
+      return response.data;
+    } catch (error) {
+      console.error('Error marking as done: ', error);
+      throw error;
+    }
+  },
+
+  deleteTask: async (taskId) => {
+    try {
+      await api.delete(`/tasks/${taskId}`);
+      return true;
+    } catch (error) {
+      console.error('Error deleting task: ', error);
+      throw error;
+    }
+  },
+
+  getTask: async (taskId) => {
+    try {
+      const response = await api.get(`/tasks/${taskId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching task: ', error);
+      throw error;
+    }
+  }
+};
+
 // export default {
 //   auth: authAPI,
 //   users: userAPI,
