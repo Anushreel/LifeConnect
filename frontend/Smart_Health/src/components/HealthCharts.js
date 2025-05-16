@@ -1,157 +1,9 @@
-// import React from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-// import './HealthCharts.css';
-
-// const HealthCharts = () => {
-//   const navigate = useNavigate();
-  
-//   // Sample data for each graph
-//   const temperatureData = [
-//     { day: 'Mon', value: 36.6 },
-//     { day: 'Tue', value: 36.7 },
-//     { day: 'Wed', value: 36.8 },
-//     { day: 'Thu', value: 36.7 },
-//     { day: 'Fri', value: 36.5 },
-//     { day: 'Sat', value: 36.6 },
-//     { day: 'Sun', value: 36.7 },
-//   ];
-  
-//   const oxygenData = [
-//     { day: 'Mon', value: 98 },
-//     { day: 'Tue', value: 97 },
-//     { day: 'Wed', value: 98 },
-//     { day: 'Thu', value: 99 },
-//     { day: 'Fri', value: 98 },
-//     { day: 'Sat', value: 97 },
-//     { day: 'Sun', value: 98 },
-//   ];
-  
-//   const heartRateData = [
-//     { day: 'Mon', value: 72 },
-//     { day: 'Tue', value: 75 },
-//     { day: 'Wed', value: 70 },
-//     { day: 'Thu', value: 74 },
-//     { day: 'Fri', value: 76 },
-//     { day: 'Sat', value: 73 },
-//     { day: 'Sun', value: 71 },
-//   ];
-  
-//   const humidityData = [
-//     { day: 'Mon', value: 45 },
-//     { day: 'Tue', value: 48 },
-//     { day: 'Wed', value: 52 },
-//     { day: 'Thu', value: 50 },
-//     { day: 'Fri', value: 47 },
-//     { day: 'Sat', value: 49 },
-//     { day: 'Sun', value: 46 },
-//   ];
-  
-//   const handleHomeClick = () => {
-//     navigate('/mainpage');
-//   };
-  
-//   const handleProfileClick = () => {
-//     navigate('/profile');
-//   };
-  
-//   return (
-//     <div className="charts-container">
-//       <div className="sidebar">
-//         <div className="menu-icon">
-//           <div className="menu-line"></div>
-//           <div className="menu-line"></div>
-//           <div className="menu-line"></div>
-//         </div>
-        
-//         <div className="sidebar-icons">
-//           <div className="sidebar-icon" onClick={handleHomeClick}>
-//             <i className="icon-home"></i>
-//           </div>
-//           <div className="sidebar-icon active">
-//             <i className="icon-chart"></i>
-//           </div>
-//           <div className="sidebar-icon" onClick={handleProfileClick}>
-//             <i className="icon-user"></i>
-//           </div>
-//         </div>
-//       </div>
-      
-//       <div className="charts-content">
-//         <div className="charts-grid">
-//           <div className="chart-card">
-//             <h3>Graph of Body Temp</h3>
-//             <div className="chart-container">
-//               <ResponsiveContainer width="100%" height="100%">
-//                 <LineChart data={temperatureData}>
-//                   <CartesianGrid strokeDasharray="3 3" />
-//                   <XAxis dataKey="day" />
-//                   <YAxis domain={[36, 37.5]} />
-//                   <Tooltip />
-//                   <Line type="monotone" dataKey="value" stroke="#1e6b75" activeDot={{ r: 8 }} />
-//                 </LineChart>
-//               </ResponsiveContainer>
-//             </div>
-//           </div>
-          
-//           <div className="chart-card">
-//             <h3>Graph of Oxygen Saturation</h3>
-//             <div className="chart-container">
-//               <ResponsiveContainer width="100%" height="100%">
-//                 <LineChart data={oxygenData}>
-//                   <CartesianGrid strokeDasharray="3 3" />
-//                   <XAxis dataKey="day" />
-//                   <YAxis domain={[95, 100]} />
-//                   <Tooltip />
-//                   <Line type="monotone" dataKey="value" stroke="#4285F4" activeDot={{ r: 8 }} />
-//                 </LineChart>
-//               </ResponsiveContainer>
-//             </div>
-//           </div>
-          
-//           <div className="chart-card">
-//             <h3>Graph of Heart Rate</h3>
-//             <div className="chart-container">
-//               <ResponsiveContainer width="100%" height="100%">
-//                 <LineChart data={heartRateData}>
-//                   <CartesianGrid strokeDasharray="3 3" />
-//                   <XAxis dataKey="day" />
-//                   <YAxis domain={[60, 85]} />
-//                   <Tooltip />
-//                   <Line type="monotone" dataKey="value" stroke="#EA4335" activeDot={{ r: 8 }} />
-//                 </LineChart>
-//               </ResponsiveContainer>
-//             </div>
-//           </div>
-          
-//           <div className="chart-card">
-//             <h3>Graph of Humidity</h3>
-//             <div className="chart-container">
-//               <ResponsiveContainer width="100%" height="100%">
-//                 <LineChart data={humidityData}>
-//                   <CartesianGrid strokeDasharray="3 3" />
-//                   <XAxis dataKey="day" />
-//                   <YAxis domain={[40, 60]} />
-//                   <Tooltip />
-//                   <Line type="monotone" dataKey="value" stroke="#34A853" activeDot={{ r: 8 }} />
-//                 </LineChart>
-//               </ResponsiveContainer>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default HealthCharts;
-
-import React, { useState, useEffect,useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { FaChartBar, FaUser, FaCog, FaBars, FaTimes } from 'react-icons/fa';
 import './HealthCharts.css';
-import { sensorAPI, userAPI } from './api';
+import { sensorAPI, userAPI, predictionAPI } from './api';
 import { Home } from 'lucide-react';
 
 const HealthCharts = () => {
@@ -160,6 +12,7 @@ const HealthCharts = () => {
   const [heartRateData, setHeartRateData] = useState([]);
   const [humidityData, setHumidityData] = useState([]);
   const [ecgData, setEcgData] = useState([]);
+  const [predData, setPredData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [days, setDays] = useState(1);
@@ -208,15 +61,15 @@ const HealthCharts = () => {
       const timestamp = new Date(reading.timestamp);
       let formattedTime;
     
-    if (showDates) {
-      // For multi-day views, include the date
-      formattedTime = timestamp.toLocaleDateString([], { month: 'short', day: 'numeric' }) + 
-                     ' ' + 
-                     timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    } else {
-      // For single day view, just show the time
-      formattedTime = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
+      if (showDates) {
+        // For multi-day views, include the date
+        formattedTime = timestamp.toLocaleDateString([], { month: 'short', day: 'numeric' }) + 
+                       ' ' + 
+                       timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      } else {
+        // For single day view, just show the time
+        formattedTime = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
       
       if (reading.temperature !== null && reading.temperature !== undefined) {
         tempData.push({
@@ -255,16 +108,63 @@ const HealthCharts = () => {
     setHeartRateData(heartData);
     setHumidityData(humidData);
     setEcgData(ecgValues);
-  },[]);
+  }, []);
+  
+  // Process prediction data for charts
+  const processPredictionData = useCallback((predictions) => {
+    // Sort predictions by timestamp
+    const sortedPredictions = [...predictions].sort((a, b) => 
+      new Date(a.prediction_timestamp || a.timestamp) - new Date(b.prediction_timestamp || b.timestamp)
+    );
+
+    const predValues = [];
+
+    // We can check the time range of the data
+    let showDates = false;
+    if (sortedPredictions.length > 1) {
+      const firstDate = new Date(sortedPredictions[0].prediction_timestamp || sortedPredictions[0].timestamp);
+      const lastDate = new Date(sortedPredictions[sortedPredictions.length - 1].prediction_timestamp || sortedPredictions[sortedPredictions.length - 1].timestamp);
+      const dayDiff = Math.floor((lastDate - firstDate) / (1000 * 60 * 60 * 24));
+      showDates = dayDiff >= 1; // Show dates if data spans more than 1 day
+    }
+
+    sortedPredictions.forEach(prediction => {
+      // Format timestamp
+      const timestamp = new Date(prediction.prediction_timestamp || prediction.timestamp);
+      let formattedTime;
+    
+      if (showDates) {
+        // For multi-day views, include the date
+        formattedTime = timestamp.toLocaleDateString([], { month: 'short', day: 'numeric' }) + 
+                       ' ' + 
+                       timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      } else {
+        // For single day view, just show the time
+        formattedTime = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
+      
+      // Add prediction result as the value (using result field from DB)
+      // Convert to a scale of 0-100 if it's not already
+      if (prediction.result !== null && prediction.result !== undefined) {
+        const value = (prediction.result >= 0 && prediction.result <= 1) ? 
+          prediction.result * 100 : prediction.result;
+          
+        predValues.push({
+          time: formattedTime,
+          value: value,
+          status: prediction.health_status
+        });
+      }
+    });
+
+    setPredData(predValues);
+  }, []);
     
   // Fetch sensor data
   const fetchSensorData = useCallback(async (userId) => {
     setLoading(true);
     console.log('Fetching sensor data with days:', days);
     try {
-      // if (days === 0) {
-      //   response = await sensorAPI.getAllReadingsForUser(userId);
-      // }
       const response = await sensorAPI.getReadingsForUser(userId, days);
       const readings = response.data || [];
       
@@ -289,7 +189,36 @@ const HealthCharts = () => {
     } finally {
       setLoading(false);
     }
-  }, [days, processChartData]);;
+  }, [days, processChartData]);
+
+  // Fetch prediction data
+  const fetchPredData = useCallback(async (userId) => {
+    console.log('Fetching prediction data with days:', days);
+    try {
+      const response = await predictionAPI.getPredictionsForUser(userId, days);
+      const predictions = response.data || [];
+      
+      if (predictions.length === 0) {
+        console.log("No prediction data available for the selected period");
+        setPredData([]);
+        return;
+      }
+      
+      // Log the time range of the received data
+      if (predictions.length > 0) {
+        const dates = predictions.map(r => new Date(r.prediction_timestamp || r.timestamp));
+        const oldestDate = new Date(Math.min.apply(null, dates));
+        const newestDate = new Date(Math.max.apply(null, dates));
+        console.log(`Got ${predictions.length} predictions from ${oldestDate.toISOString()} to ${newestDate.toISOString()}`);
+      }
+      
+      // Process the prediction data for charts
+      processPredictionData(predictions);
+    } catch (error) {
+      console.error('Failed to fetch prediction data:', error);
+      setPredData([]);
+    }
+  }, [days, processPredictionData]);
 
   // Fetch user data
   useEffect(() => {
@@ -314,16 +243,18 @@ const HealthCharts = () => {
     fetchUserData().then(userData => {
       if (userData && userData.uid) {
         fetchSensorData(userData.uid);
+        fetchPredData(userData.uid);
       }
     });
-  }, [fetchSensorData]); // Add fetchSensorData to the dependency array
+  }, [fetchSensorData, fetchPredData]); // Add fetchPredData to the dependency array
 
-  // Second useEffect (around line 297)
+  // Second useEffect to fetch data when days changes
   useEffect(() => {
     if (user && user.uid) {
       fetchSensorData(user.uid);
+      fetchPredData(user.uid);
     }
-  }, [days, user, fetchSensorData]);
+  }, [days, user, fetchSensorData, fetchPredData]);
 
   const handleHomeClick = () => {
     navigate('/mainpage');
@@ -552,6 +483,27 @@ const HealthCharts = () => {
                 </ResponsiveContainer>
               </div>
             </div>
+                
+            <div className="chart-card">
+              <h3>Health Prediction Score</h3>
+              <div className="chart-container">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={predData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="time" />
+                    <YAxis domain={[0, 100]} />
+                    <Tooltip />
+                    <Line 
+                      type="monotone" 
+                      dataKey="value" 
+                      stroke={getStatusColor(predData)} 
+                      activeDot={{ r: 8 }} 
+                      strokeWidth={2}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </div>
         )}
 
@@ -572,6 +524,13 @@ const HealthCharts = () => {
                   <span className="status-label">Heart Rate:</span>
                   <span className="status-value">{heartRateData[heartRateData.length-1].value} BPM</span>
                   <span className="status-text">{heartRateData[heartRateData.length-1].status || 'Normal'}</span>
+                </div>
+              )}
+              {predData.length > 0 && (
+                <div className={`status-indicator ${predData[predData.length-1].status?.toLowerCase() || 'normal'}`}>
+                  <span className="status-label">Health Score:</span>
+                  <span className="status-value">{predData[predData.length-1].value.toFixed(1)}</span>
+                  <span className="status-text">{predData[predData.length-1].status || 'Normal'}</span>
                 </div>
               )}
             </div>

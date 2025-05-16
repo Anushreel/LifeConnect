@@ -1,0 +1,161 @@
+/* Base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 70px;
+  min-width: 70px;
+  background-color: #fff;
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 100;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.sidebar.open {
+  width: 180px;
+  min-width: 180px;
+}
+
+/* Replace menu-icon with menu-toggle */
+.menu-toggle {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+  cursor: pointer;
+}
+
+.toggle-icon {
+  color: #93c5d3;
+}
+
+.sidebar-icons {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+}
+
+.sidebar-icon {
+  width: 100%;
+  height: 45px; 
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  padding: 0;
+  background-color: transparent;
+}
+
+.sidebar-icon.active {
+  background-color: rgba(147, 197, 211, 0.2);
+}
+
+/* Icon alignment */
+.sidebar-icon {
+  padding-left: 12px;
+}
+
+.sidebar:not(.open) .sidebar-icon {
+  padding-left: 0;
+  justify-content: center;
+}
+
+.icon-text {
+  margin-left: 12px;
+  display: none;
+  color: #333;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.sidebar.open .icon-text {
+  display: inline;
+}
+
+/* Icon styling to prevent shifting */
+.icon {
+  color: #93c5d3 !important;
+  min-width: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sidebar-icon.active .icon {
+  color: #1e6b75 !important;
+}
+
+/* Sidebar overlay for mobile */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+}
+
+.sidebar-overlay.active {
+  display: block;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+  /* Mobile sidebar that slides over content */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 70px;
+    min-width: 70px;
+    transform: translateX(-100%);
+    z-index: 1000;
+    background-color: white;
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+    width: 200px;
+    min-width: 200px;
+  }
+  
+  /* Fixed menu toggle for mobile */
+  .menu-toggle {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    margin: 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .sidebar-icons {
+    margin-top: 60px;
+  }
+}

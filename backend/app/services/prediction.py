@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import joblib
 import logging
+import requests
 from datetime import datetime, date, timezone
 from sqlalchemy.orm import Session
 from typing import Dict, Any
@@ -63,6 +64,19 @@ class HealthPredictor:
         input=np.array(df)
         return input
     
+    def update_thingspeak(self, value: float):
+        """Send predicted value to ThingSpeak cloud"""
+        try:
+            API_KEY = "6NU3GF520GI8CZ2S"
+            url = f"https://api.thingspeak.com/update?api_key={API_KEY}&field1={value}"
+            response = requests.get(url)
+            if response.status_code == 200:
+                logger.info(f"ThingSpeak updated with value: {value}")
+            else:
+                logger.warning(f"ThingSpeak update failed with status code: {response.status_code}")
+        except Exception as e:
+            logger.error(f"Failed to update ThingSpeak: {e}")
+
     def predict(self, user_data, sensor_reading, db_session: Session):
         """Generate health prediction for a sensor reading"""
         try:
@@ -78,7 +92,9 @@ class HealthPredictor:
             # Determine health status
             health_status = self.determine_health_status(result)
             
-            
+            # 🔔 Update ThingSpeak
+            self.update_thingspeak(float(result))
+
             # Create prediction record
             prediction_data = {
                 "reading_id": sensor_reading.id,
