@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { format, getDaysInMonth, startOfMonth, getDay, parseISO } from 'date-fns';
+import { format, getDaysInMonth, startOfMonth, getDay, parseISO, isSameDay, isSameMonth } from 'date-fns';
 import { taskAPI } from './api';
 import { FaCheckCircle, FaCircle, FaPlus, FaTrash, FaPencilAlt } from 'react-icons/fa';
 import './TaskCalendar.css';
 
 const TaskCalendar = ({ userId }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(new Date().getDate());
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [tasks, setTasks] = useState([]);
   const [userTasks, setUserTasks] = useState({});
   const [newTask, setNewTask] = useState('');
@@ -14,6 +14,11 @@ const TaskCalendar = ({ userId }) => {
   const [editingTask, setEditingTask] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Helper function to create a date key for storing tasks
+  const getDateKey = (date) => {
+    return format(date, 'yyyy-MM-dd');
+  };
 
   // Fetch user tasks
   useEffect(() => {
@@ -25,14 +30,16 @@ const TaskCalendar = ({ userId }) => {
         const taskData = await taskAPI.getUserTasks(userId);
         setTasks(taskData);
         
-        // Organize tasks by date
+        // Organize tasks by full date
         const tasksByDate = {};
         taskData.forEach(task => {
-          const day = new Date(task.created_at || new Date()).getDate();
-          if (!tasksByDate[day]) {
-            tasksByDate[day] = [];
+          const taskDate = new Date(task.created_at || new Date());
+          const dateKey = getDateKey(taskDate);
+          
+          if (!tasksByDate[dateKey]) {
+            tasksByDate[dateKey] = [];
           }
-          tasksByDate[day].push(task);
+          tasksByDate[dateKey].push(task);
         });
         setUserTasks(tasksByDate);
       } catch (err) {
@@ -68,7 +75,9 @@ const TaskCalendar = ({ userId }) => {
         } else if (day > daysInMonth) {
           week.push(null);
         } else {
-          week.push(day);
+          // Create actual date object for each day
+          const dayDate = new Date(date.getFullYear(), date.getMonth(), day);
+          week.push(dayDate);
           day++;
         }
       }
@@ -106,16 +115,19 @@ const TaskCalendar = ({ userId }) => {
       setIsLoading(true);
       const createdTask = await taskAPI.createTask(taskData);
       
+      // Ensure the created task has the selected date
+      createdTask.created_at = selectedDate.toISOString();
+      
       // Update local state
       setTasks([...tasks, createdTask]);
       
-      // Update tasks by date
-      const day = selectedDate;
+      // Update tasks by date using full date key
+      const dateKey = getDateKey(selectedDate);
       const updatedTasksByDate = { ...userTasks };
-      if (!updatedTasksByDate[day]) {
-        updatedTasksByDate[day] = [];
+      if (!updatedTasksByDate[dateKey]) {
+        updatedTasksByDate[dateKey] = [];
       }
-      updatedTasksByDate[day].push(createdTask);
+      updatedTasksByDate[dateKey].push(createdTask);
       setUserTasks(updatedTasksByDate);
       
       // Reset form
@@ -143,17 +155,20 @@ const TaskCalendar = ({ userId }) => {
       setIsLoading(true);
       const updatedTask = await taskAPI.updateTask(editingTask.task_id, taskData);
       
+      // Preserve the original created_at date
+      updatedTask.created_at = editingTask.created_at;
+      
       // Update local state
       const updatedTasks = tasks.map(task => 
         task.task_id === updatedTask.task_id ? updatedTask : task
       );
       setTasks(updatedTasks);
       
-      // Update tasks by date
-      const day = selectedDate;
+      // Update tasks by date using full date key
+      const dateKey = getDateKey(new Date(updatedTask.created_at));
       const updatedTasksByDate = { ...userTasks };
-      if (updatedTasksByDate[day]) {
-        updatedTasksByDate[day] = updatedTasksByDate[day].map(task => 
+      if (updatedTasksByDate[dateKey]) {
+        updatedTasksByDate[dateKey] = updatedTasksByDate[dateKey].map(task => 
           task.task_id === updatedTask.task_id ? updatedTask : task
         );
       }
@@ -177,6 +192,12 @@ const TaskCalendar = ({ userId }) => {
       setIsLoading(true);
       const updatedTask = await taskAPI.markTaskAsDone(taskId);
       
+      // Find the original task to preserve created_at
+      const originalTask = tasks.find(task => task.task_id === taskId);
+      if (originalTask) {
+        updatedTask.created_at = originalTask.created_at;
+      }
+      
       // Update local state
       const updatedTasks = tasks.map(task => 
         task.task_id === taskId ? updatedTask : task
@@ -185,10 +206,12 @@ const TaskCalendar = ({ userId }) => {
       
       // Update tasks by date
       const updatedTasksByDate = { ...userTasks };
-      Object.keys(updatedTasksByDate).forEach(day => {
-        updatedTasksByDate[day] = updatedTasksByDate[day].map(task => 
-          task.task_id === taskId ? updatedTask : task
-        );
+      Object.keys(updatedTasksByDate).forEach(dateKey => {
+        if (updatedTasksByDate[dateKey].some(task => task.task_id === taskId)) {
+          updatedTasksByDate[dateKey] = updatedTasksByDate[dateKey].map(task => 
+            task.task_id === taskId ? updatedTask : task
+          );
+        }
       });
       setUserTasks(updatedTasksByDate);
     } catch (err) {
@@ -211,12 +234,12 @@ const TaskCalendar = ({ userId }) => {
       
       // Update tasks by date
       const updatedTasksByDate = { ...userTasks };
-      Object.keys(updatedTasksByDate).forEach(day => {
-        updatedTasksByDate[day] = updatedTasksByDate[day].filter(task => 
+      Object.keys(updatedTasksByDate).forEach(dateKey => {
+        updatedTasksByDate[dateKey] = updatedTasksByDate[dateKey].filter(task => 
           task.task_id !== taskId
         );
-        if (updatedTasksByDate[day].length === 0) {
-          delete updatedTasksByDate[day];
+        if (updatedTasksByDate[dateKey].length === 0) {
+          delete updatedTasksByDate[dateKey];
         }
       });
       setUserTasks(updatedTasksByDate);
@@ -247,11 +270,14 @@ const TaskCalendar = ({ userId }) => {
   };
 
   // Get tasks for selected date
-  const selectedDateTasks = userTasks[selectedDate] || [];
+  const selectedDateKey = getDateKey(selectedDate);
+  const selectedDateTasks = userTasks[selectedDateKey] || [];
 
   // Check if a date has tasks (for calendar indicators)
-  const hasTasksOnDate = (day) => {
-    return userTasks[day] && userTasks[day].length > 0;
+  const hasTasksOnDate = (date) => {
+    if (!date) return false;
+    const dateKey = getDateKey(date);
+    return userTasks[dateKey] && userTasks[dateKey].length > 0;
   };
 
   return (
@@ -273,14 +299,14 @@ const TaskCalendar = ({ userId }) => {
         
         {calendarDays.map((week, weekIndex) => (
           <div key={`week-${weekIndex}`} className="calendar-week">
-            {week.map((day, dayIndex) => (
+            {week.map((date, dayIndex) => (
               <div
                 key={`day-${weekIndex}-${dayIndex}`}
-                className={`calendar-day ${day === selectedDate ? 'selected' : ''} ${!day ? 'empty' : ''} ${hasTasksOnDate(day) ? 'has-tasks' : ''}`}
-                onClick={() => handleDateClick(day)}
+                className={`calendar-day ${date && isSameDay(date, selectedDate) ? 'selected' : ''} ${!date ? 'empty' : ''} ${date && hasTasksOnDate(date) ? 'has-tasks' : ''}`}
+                onClick={() => handleDateClick(date)}
               >
-                <span className="day-number">{day}</span>
-                {hasTasksOnDate(day) && (
+                <span className="day-number">{date ? date.getDate() : ''}</span>
+                {date && hasTasksOnDate(date) && (
                   <div className="task-indicator"></div>
                 )}
               </div>
@@ -291,7 +317,7 @@ const TaskCalendar = ({ userId }) => {
 
       <div className="tasks-section">
         <div className="tasks-header">
-          <h3>Tasks for {selectedDate && `${format(new Date(currentMonth.getFullYear(), currentMonth.getMonth(), selectedDate), 'MMMM d, yyyy')}`}</h3>
+          <h3>Tasks for {format(selectedDate, 'MMMM d, yyyy')}</h3>
           <button className="add-task-btn" onClick={openAddTaskModal}>
             <FaPlus /> Add Task
           </button>
