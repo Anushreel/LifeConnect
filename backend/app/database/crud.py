@@ -3,8 +3,9 @@ from sqlalchemy import desc, and_
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 from app.schemas.user import UserCreate,User
-
-from app.database.models import User, Device, Sensor, Prediction,user_device,Task
+from fastapi import HTTPException
+from app.database.models import User, Device, Sensor, Prediction,user_device,Task,Notification
+from app.schemas.notification import NotificationCreate, NotificationUpdate
 import logging
 
 logger = logging.getLogger(__name__)
@@ -303,3 +304,134 @@ def mark_as_done(db:Session,task_id:int):
 def get_task_by_id(db: Session, task_id: int):
     """Get a specific task by ID"""
     return db.query(Task).filter(Task.task_id == task_id).first()
+
+# Notification operations
+# Create a new notification
+def create_notification(db: Session, notification: NotificationCreate) -> Notification:
+    # Verify user exists
+    user = db.query(User).filter(User.id == notification.user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Verify prediction exists if provided
+    if notification.prediction_id:
+        prediction = db.query(Prediction).filter(Prediction.id == notification.prediction_id).first()
+        if not prediction:
+            raise HTTPException(status_code=404, detail="Prediction not found")
+    
+    db_notification = Notification(
+        user_id=notification.user_id,
+        prediction_id=notification.prediction_id,
+        severity=notification.severity,
+        is_read=False
+    )
+    
+    db.add(db_notification)
+    db.commit()
+    db.refresh(db_notification)
+    return db_notification
+
+# Get all notifications for a user
+def get_user_notifications(db: Session, user_id: int, skip: int = 0, limit: int = 100) -> List[Notification]:
+    return db.query(Notification)\
+             .filter(Notification.user_id == user_id)\
+             .order_by(Notification.created_at.desc())\
+             .offset(skip)\
+             .limit(limit)\
+             .all()
+
+# Get count of all notifications for a user
+def get_notification_count(db: Session, user_id: int) -> int:
+    return db.query(Notification)\
+             .filter(Notification.user_id == user_id)\
+             .count()
+
+# Get count of unread notifications for a user
+def get_unread_notification_count(db: Session, user_id: int) -> int:
+    return db.query(Notification)\
+             .filter(Notification.user_id == user_id, 
+                    Notification.is_read == False)\
+             .count()
+
+# Get a specific notification by ID
+def get_notification(db: Session, notification_id: int) -> Optional[Notification]:
+    return db.query(Notification).filter(Notification.id == notification_id).first()
+
+def get_all_notifications(
+    db: Session, 
+    skip: int = 0, 
+    limit: int = 100,
+    user_id: Optional[int] = None,
+    severity: Optional[str] = None
+) -> List[Notification]:
+    """
+    Get all notifications with optional filtering by user_id and severity.
+    Includes pagination with skip and limit parameters.
+    """
+    query = db.query(Notification)
+    
+    # Apply filters if provided
+    if user_id is not None:
+        query = query.filter(Notification.user_id == user_id)
+    
+    if severity is not None:
+        query = query.filter(Notification.severity == severity)
+    
+    # Apply pagination
+    return query.offset(skip).limit(limit).all()
+
+# Update a notification
+def update_notification(db: Session, notification_id: int, notification_update: NotificationUpdate) -> Notification:
+    db_notification = get_notification(db, notification_id)
+    
+    if not db_notification:
+        raise HTTPException(status_code=404, detail="Notification not found")
+    
+    # Update notification fields
+    for key, value in notification_update.dict(exclude_unset=True).items():
+        setattr(db_notification, key, value)
+    
+    db.commit()
+    db.refresh(db_notification)
+    return db_notification
+
+# Mark notification as read
+def mark_notification_as_read(db: Session, notification_id: int) -> Notification:
+    return update_notification(db, notification_id, NotificationUpdate(is_read=True))
+
+# Mark all user notifications as read
+def mark_all_notifications_as_read(db: Session, user_id: int) -> int:
+    unread_count = db.query(Notification)\
+                    .filter(Notification.user_id == user_id, 
+                           Notification.is_read == False)\
+                    .update({"is_read": True})
+    
+    db.commit()
+    return unread_count
+
+# Delete a notification
+def delete_notification(db: Session, notification_id: int) -> bool:
+    db_notification = get_notification(db, notification_id)
+    
+    if not db_notification:
+        raise HTTPException(status_code=404, detail="Notification not found")
+    
+    db.delete(db_notification)
+    db.commit()
+    return True
+
+# Create notifications for critical health predictions
+def create_critical_alert_notification(
+    db: Session, 
+    user_id: int, 
+    prediction_id: int, 
+    prediction_type: str,
+    prediction_value: float
+) -> Notification:
+    notification = NotificationCreate(
+        user_id=user_id,
+        prediction_id=prediction_id,
+        severity="critical"
+    )
+    
+    return create_notification(db, notification)

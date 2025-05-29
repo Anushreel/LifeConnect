@@ -3,12 +3,11 @@
 // import { useNavigate } from 'react-router-dom';
 // import docwithlaptop from "./docwithlaptop.png";
 // import illustration from "./illustration.png";
-// import { userAPI,sensorAPI,predictionAPI } from './api';
+// import { userAPI, sensorAPI, predictionAPI } from './api';
 // import { format, getDaysInMonth, startOfMonth, getDay } from 'date-fns';
 // import { FaChartBar, FaUser, FaCog, FaBars, FaTimes } from 'react-icons/fa';
 // import { Home } from 'lucide-react';
-// import TaskCalendar from './TaskCalendar';
-
+// import TaskCalendar from './TaskCalendar'; // Import the TaskCalendar component
 
 // const HealthDashboard = () => {
 //   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -70,7 +69,7 @@
 //         const userId = userResponse.data.uid;
     
 //         // Fetch sensor data for user
-//         const sensorResponse = await sensorAPI.getReadingsForUser(userId,1);
+//         const sensorResponse = await sensorAPI.getReadingsForUser(userId, 1);
         
 //         // Check if the response contains data and it's an array with at least one reading
 //         if (sensorResponse.data && Array.isArray(sensorResponse.data) && sensorResponse.data.length > 0) {
@@ -94,43 +93,6 @@
     
 //     fetchUserDataAndSensorData();
 //   }, []);
-  
-  
-
-//   // Generate calendar days dynamically
-//   const generateCalendarDays = (date) => {
-//     const daysInMonth = getDaysInMonth(date);
-//     const startDay = getDay(startOfMonth(date));
-//     const calendarDays = [];
-//     let day = 1;
-
-//     for (let i = 0; i < 6; i++) {
-//       const week = [];
-//       for (let j = 0; j < 7; j++) {
-//         if (i === 0 && j < startDay) {
-//           week.push(null);
-//         } else if (day > daysInMonth) {
-//           week.push(null);
-//         } else {
-//           week.push(day);
-//           day++;
-//         }
-//       }
-//       calendarDays.push(week);
-      
-//       // Break early if we've already filled the month
-//       if (day > daysInMonth) break;
-//     }
-
-//     return calendarDays;
-//   };
-
-//   const calendarDays = generateCalendarDays(currentMonth);
-//   const dayLabels = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-
-//   const handleDateClick = (date) => {
-//     if (date) setSelectedDate(date);
-//   };
 
 //   const handleProfileClick = () => {
 //     navigate('/profile');
@@ -145,14 +107,6 @@
 //   const handleSwitchAdmin = () => {
 //     navigate('/admin');
 //     if (windowWidth < 768) setSidebarOpen(false);
-//   };
-
-//   const handlePrevMonth = () => {
-//     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
-//   };
-
-//   const handleNextMonth = () => {
-//     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
 //   };
 
 //   const toggleSidebar = () => {
@@ -302,38 +256,12 @@
 //           </div>
 //         </div>
 
-//         <div className="calendar-section">
-//           <div className="calendar-header">
-//             <button onClick={handlePrevMonth}>&lt;</button>
-//             <span>{format(currentMonth, 'MMMM yyyy')}</span>
-//             <button onClick={handleNextMonth}>&gt;</button>
-//           </div>
-//           <div className="calendar">
-//             <div className="calendar-days">
-//               {dayLabels.map((day, index) => (
-//                 <div key={`day-${index}`} className="day-label">{day}</div>
-//               ))}
-//             </div>
-//             {calendarDays.map((week, weekIndex) => (
-//               <div key={`week-${weekIndex}`} className="calendar-week">
-//                 {week.map((day, dayIndex) => (
-//                   <div
-//                     key={`day-${weekIndex}-${dayIndex}`}
-//                     className={`calendar-day ${day === selectedDate ? 'selected' : ''} ${!day ? 'empty' : ''}`}
-//                     onClick={() => handleDateClick(day)}
-//                   >
-//                     {day}
-//                   </div>
-//                 ))}
-//               </div>
-//             ))}
-//           </div>
-//         </div>
+//         {/* Replace calendar with TaskCalendar component */}
+//         {user && <TaskCalendar userId={user.uid} />}
 //       </div>
 //     </div>
 //   );
 // };
-
 // export default HealthDashboard;
 
 import React, { useState, useEffect } from 'react';
@@ -346,6 +274,7 @@ import { format, getDaysInMonth, startOfMonth, getDay } from 'date-fns';
 import { FaChartBar, FaUser, FaCog, FaBars, FaTimes } from 'react-icons/fa';
 import { Home } from 'lucide-react';
 import TaskCalendar from './TaskCalendar'; // Import the TaskCalendar component
+import NotificationSystem from './NotificationSystem'; // Import the NotificationSystem component
 
 const HealthDashboard = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -446,6 +375,11 @@ const HealthDashboard = () => {
     navigate('/admin');
     if (windowWidth < 768) setSidebarOpen(false);
   };
+  
+  const handleNotificationsClick = () => {
+    navigate('/notifications');
+    if (windowWidth < 768) setSidebarOpen(false);
+  };
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -519,6 +453,13 @@ const HealthDashboard = () => {
       <div className="main-content">
         <div className="header">
           <div className="logo">LifeConnect</div>
+          {/* Add NotificationSystem component to header */}
+          <div className="header-actions">
+            <NotificationSystem 
+              userId={user?.uid} 
+              isAdmin={false} 
+            />
+          </div>
         </div>
 
         <div className="welcome-card">

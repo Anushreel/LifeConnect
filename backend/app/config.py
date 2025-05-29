@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     THINGSPEAK_BASE_URL: str = "https://api.thingspeak.com"
     
     # Data processing
-    DATA_PROCESSING_INTERVAL: int = 2  # Minutes
+    DATA_PROCESSING_INTERVAL: int = 1  # Minutes
     
     class Config:
         case_sensitive = True
