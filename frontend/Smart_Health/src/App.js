@@ -52,6 +52,7 @@ import HealthDashboard from "./components/LifeConnectDashboard";
 import UserProfile from "./components/UserProfile";
 import HealthCharts from "./components/HealthCharts";
 import AdminPage from "./components/AdminPage";
+import NotificationsPage from './components/NotificationPage';
 
 function App() {
   return (
@@ -99,9 +100,13 @@ function App() {
                 </ProtectedRoute>
               } 
             />
-            
-            {/* Catch-all route - redirect to home
-            <Route path="*" element={<Navigate to="/" />} /> */}
+
+            <Route path="/notifications" element={
+              <ProtectedRoute>
+              <NotificationsPage />
+            </ProtectedRoute>} />
+            {/* Catch-all route - redirect to home */}
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Layout>
       </Router>

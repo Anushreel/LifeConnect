@@ -42,6 +42,7 @@ class User(Base):
     devices = relationship("Device", secondary="user_device", back_populates="users")
     sensor_readings = relationship("Sensor", back_populates="user")  # Direct access to readings
     task = relationship("Task",back_populates="use")
+    notifications=relationship("Notification",back_populates="user")
 
 
 class Device(Base):
@@ -65,6 +66,7 @@ class Prediction(Base):
 
     # Relationships
     sensor_reading = relationship("Sensor", back_populates="prediction")
+    noti=relationship("Notification",back_populates="pred")
 
 class Task(Base):
     __tablename__="task"
@@ -76,6 +78,18 @@ class Task(Base):
     # relationships
     use = relationship("User", back_populates="task")
 
+class Notification(Base):
+    __tablename__="notification"
+    id=Column(Integer,primary_key=True,index=True,autoincrement=True)
+    user_id=Column(Integer,ForeignKey(User.uid))
+    prediction_id=Column(Integer, ForeignKey("predictions.id"), nullable=True)
+    severity = Column(Text)
+    is_read = Column(Boolean, default=False)
+    created_at=Column(DateTime, default=datetime.now(timezone.utc))
+
+    # relationships
+    user=relationship("User",back_populates="notifications")
+    pred=relationship("Prediction",back_populates="noti")
 # Association table for the many-to-many relationship between User and Device
 user_device = Table(
     "user_device",
