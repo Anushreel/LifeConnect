@@ -10,7 +10,7 @@ class ThingSpeakService:
     def __init__(self, base_url: str = "https://api.thingspeak.com"):
         self.base_url = base_url
     
-    def fetch_latest_data(self, channel_id: str = "2771512", read_api_key: str= "TDAOWY27LQ0YE4H0") -> Optional[Dict[str, Any]]:
+    def fetch_latest_data(self, channel_id: str = "2771512", read_api_key: str) -> Optional[Dict[str, Any]]:
         """
         Fetch the latest entry from a ThingSpeak channel
         """
