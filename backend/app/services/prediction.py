@@ -3,6 +3,8 @@ import pandas as pd
 import joblib
 import logging
 import requests
+import os
+from dotenv import load_dotenv
 from datetime import datetime, date, timezone
 from sqlalchemy.orm import Session
 from typing import Dict, Any
@@ -10,6 +12,7 @@ from sklearn.preprocessing import OneHotEncoder
 from app.database.crud import create_health_prediction,get_user
 
 logger = logging.getLogger(__name__)
+load_dotenv()
 
 class HealthPredictor:
     def __init__(self, scaler_path="app/models/ml_models/scaler.pkl", model_path="app/models/ml_models/health_prediction_model.pkl"):
@@ -67,7 +70,7 @@ class HealthPredictor:
     def update_thingspeak(self, value: float):
         """Send predicted value to ThingSpeak cloud"""
         try:
-            API_KEY = "6NU3GF520GI8CZ2S"
+            API_KEY = os.getenv("THINGSPEAK_WRITE_API_KEY")
             url = f"https://api.thingspeak.com/update?api_key={API_KEY}&field1={value}"
             response = requests.get(url)
             if response.status_code == 200:
